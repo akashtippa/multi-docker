@@ -1,0 +1,22 @@
+sudo:required
+service:
+  - docker
+
+before_install
+  - docker build -t akash/react-test -f ./client/Dockerfile.dev ./client
+
+script: 
+  - docker run akash/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t akash/multi-client ./client
+  - docker build -t akash/multi-nginx ./nginx
+  - docker build -t akash/multi-server ./server
+  - docker build -t akash/multi-worker ./worker
+# Login to the Docker cli
+  - echo "$DOCKER_PASSWORD"| dockerlogin -u "$DOCKER_ID" --password-stdin
+# Take those images and push them to docker hub
+  - docker push akash/multi-clinet
+  - docker push akash/multi-nginx
+  - docker push akash/multi-server
+  - docker push akash/multi-worker
