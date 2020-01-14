@@ -20,3 +20,5 @@ after_success:
   - docker push akash/multi-nginx
   - docker push akash/multi-server
   - docker push akash/multi-worker
+
+
